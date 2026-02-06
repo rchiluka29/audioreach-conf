@@ -33,6 +33,16 @@ AC_ARG_WITH([qcom],
         [with_qcom=no])
 AM_CONDITIONAL([VENDOR_QCOM], [test "x${with_qcom}" = "xyes"])
 
+# Check at m4/autoconf time if qcom/m4 directory exists
+m4_if(m4_esyscmd_s([test -d qcom/m4 && echo yes]), [yes], [
+    AS_IF([test "x$with_qcom" = "xyes"], [
+        AC_CONFIG_SUBDIRS([qcom])
+    ])
+], [
+    # qcom/configure.ac doesn't exist, skip AC_CONFIG_SUBDIRS entirely so static analysis ignores it
+    AC_MSG_NOTICE([Skipping qcom subdirectory configuration - qcom source not found])
+])
+
 AC_CONFIG_FILES([ \
         Makefile \
         linux/Makefile \
@@ -40,9 +50,5 @@ AC_CONFIG_FILES([ \
         linux/reference/Makefile \
         linux/reference/config.pc
         ])
-
-
-# Declare recursive configure into subpackages
-AM_COND_IF([VENDOR_QCOM], [AC_CONFIG_SUBDIRS([qcom])])
 
 AC_OUTPUT
