@@ -1,3 +1,4 @@
+
 #                                               -*- Autoconf -*-
 # configure.ac -- Autoconf script for audioreach-conf
 #
